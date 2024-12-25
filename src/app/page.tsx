@@ -1,35 +1,31 @@
 "use client"
 import { useState, useRef } from "react";
 
-export default function Stopwatch() {
-  const [startTime, setStartTime] = useState<number|null>(0);
-  const [now, setNow] = useState<number|null>(0);
-  const intervalRef = useRef(0);
+export default function VideoPlayer() {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const myRef = useRef<HTMLVideoElement>(null);
 
-  function handleStart() {
-    setStartTime(Date.now());
-    setNow(Date.now());
-
-    clearInterval(intervalRef.current);
-    intervalRef.current = setInterval(() => {
-      setNow(Date.now());
-    }, 10);
-  }
-
-  function handleStop() {
-    clearInterval(intervalRef.current);
-  }
-
-  let secondsPassed = 0;
-  if (startTime != null && now != null) {
-    secondsPassed = (now - startTime) / 1000;
+  function handleClick() {
+    
+    if (myRef.current != null )
+      if (isPlaying) {
+      setIsPlaying(false);
+      myRef.current.pause();
+    } else {
+      setIsPlaying(true);
+      myRef.current.play();
+    }
   }
 
   return (
     <>
-      <h1>Time passed: {secondsPassed.toFixed(3)}</h1>
-      <button onClick={handleStart}>Start</button>
-      <button onClick={handleStop}>Stop</button>
+      <button onClick={handleClick}>{isPlaying ? "Pause" : "Play"}</button>
+      <video width="250" ref={myRef}>
+        <source
+          src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+          type="video/mp4"
+        />
+      </video>
     </>
   );
 }
